@@ -22,14 +22,11 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV ELASTIC_PKG elasticsearch-5.2.1 
 
 # add user to avoid starting elasticsearch as root user
-#RUN useradd -d /home/esuser -m esuser -u 1000
-RUN groupadd -g 1000 esuser 
-RUN useradd esuser -u 1000 -g 1000 -d /home/esuser 
+RUN useradd -d /home/esuser -m esuser -u 1000
 
 WORKDIR /home/esuser
 
-# as a volume at the end
-RUN mkdir data
+# /data as a volume 
 VOLUME ["/home/esuser/data"]
 
 # download and install elasticsearch
@@ -45,8 +42,8 @@ EXPOSE 9200 9300
 ADD elasticsearch.yml /home/esuser/elasticsearch/config/elasticsearch.yml 
 
 # run elastic search as senzuser
-RUN chown -R 1000:1000 /home/esuser/elasticsearch 
-RUN chown -R 1000:1000 /home/esuser/data 
+RUN chown -R esuser:esuser /home/esuser/elasticsearch 
+RUN chown -R esuser:esuser /home/esuser/data 
 
 USER esuser
 
